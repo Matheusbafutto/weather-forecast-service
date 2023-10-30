@@ -36,6 +36,18 @@ export MONGODB_URI=mongodb://<local-mongodb-host>:<local-mongodb-port>
 dotnet run
 ```
 
+## API summary
+
+Swagger URL: `<baseURl>/swagger`
+In local development this link will look like `http://localhost:5118/swagger`
+
+- `GET /weatherforecats/all`: gets all previous entries with their last forecasts
+- `GET /weatherforecats?id=<entryId>`: gets previously forecasted record by its id
+- `GET /weatherforecats/location?latitude=<float>&longitude=<float>`: gets previously forecasted record by its coordinates
+- `POST /weatherforecats?latitude=<float>&longitude=<float>`: Creates new record with input coordinates and a new approximated forecast for location
+- `PUT /weatherforecats?id=<id>`: Overrides existing record forecast with the latest forecast for that location
+- `DELETE /weatherforecats?id=<id>`: Removes the record for that location from the database
+
 ## TODO
 
 - [ ] Work test coverage
