@@ -1,46 +1,60 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using weather_forecast_service.Interfaces;
 using weather_forecast_service.Models;
 
 namespace weather_forecast_service.Services;
 
-public static class WeatherForecastService
-{
+public class WeatherForecastService {
 
-    public static List<WeatherForecast> GetAll() => WeatherForecastInMemoryDataStoreService.GetAll();
+    private readonly IWeatherForecastDataStore _weatherForecastDataStore;
 
-    public static WeatherForecast? Get(double latitude, double longitude) =>
-        WeatherForecastInMemoryDataStoreService.Get(latitude, longitude);
+    private readonly WeatherForecastDataService _weatherForecastDataService;
 
-    public static WeatherForecast? Get(int id) =>
-        WeatherForecastInMemoryDataStoreService.Get(id);
+    public WeatherForecastService(
+        IWeatherForecastDataStore weatherForecastDataStore,
+        WeatherForecastDataService weatherForecastDataService
+    ) {
+        _weatherForecastDataStore = weatherForecastDataStore;
+        _weatherForecastDataService = weatherForecastDataService;
+    }
 
-    public static async Task Add(double latitude, double longitude) {
-        WeatherForecast? weatherForecast = await WeatherForecastDataService.getForecast(latitude, longitude);
+  public Task<WeatherForecast?[]> GetAll() {
+    return _weatherForecastDataStore.GetAll();
+  }
+
+  public Task<WeatherForecast?> Get(double latitude, double longitude) {
+        return _weatherForecastDataStore.Get(latitude, longitude);
+    }
+
+    public Task<WeatherForecast?> Get(string id) {
+        return _weatherForecastDataStore.Get(id);
+    }
+
+    public async Task Add(double latitude, double longitude) {
+        WeatherForecast? weatherForecast = await _weatherForecastDataService.GetForecast(latitude, longitude);
 
         if (weatherForecast != null) {
-            WeatherForecastInMemoryDataStoreService.Add(weatherForecast);
+            await _weatherForecastDataStore.Add(weatherForecast);
         }
     }
 
-    public static void Delete(int id)
-    {
-        WeatherForecastInMemoryDataStoreService.Delete(id);
+    public Task Delete(string id) {
+        return _weatherForecastDataStore.Delete(id);
     }
 
-    public static async Task<WeatherForecast?> Update(int id)
-    {
-        WeatherForecast? record = WeatherForecastInMemoryDataStoreService.Get(id);
+    public async Task<WeatherForecast?> Update(string id) {
+        WeatherForecast? record = await _weatherForecastDataStore.Get(id);
         if (record == null) {
             return null;
         }
 
-        WeatherForecast? weatherForecast = await WeatherForecastDataService.getForecast(
+        WeatherForecast? weatherForecast = await _weatherForecastDataService.GetForecast(
             record.Latitude,
             record.Longitude
         );
 
         if (weatherForecast != null) {
-            WeatherForecastInMemoryDataStoreService.Update(weatherForecast);
+            weatherForecast.Id = record.Id;
+            await _weatherForecastDataStore.Update(weatherForecast);
             return weatherForecast;
         }
         return null;

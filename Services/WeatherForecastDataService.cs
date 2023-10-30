@@ -5,19 +5,20 @@ using weather_forecast_service.Models;
 
 namespace weather_forecast_service.Services;
 
-public static class WeatherForecastDataService {
-  private static HttpClient client { get; }
+public class WeatherForecastDataService {
+  private readonly HttpClient client;
 
-  private static String baseUrl { get; } = "https://api.open-meteo.com";
+  private readonly string baseUrl;
 
-  static WeatherForecastDataService() {
+  public WeatherForecastDataService(string weatherApiBaseUrl = "https://api.open-meteo.com") {
     client = new();
     client.DefaultRequestHeaders.Accept.Add(
       new MediaTypeWithQualityHeaderValue("application/json"));
+    baseUrl = weatherApiBaseUrl;
   }
 
-  public static async Task<WeatherForecast?> getForecast(double latitude, double longitude) {
-    String url = String.Format(
+  public async Task<WeatherForecast?> GetForecast(double latitude, double longitude) {
+    string url = String.Format(
       "{0}/v1/forecast?latitude={1}&longitude={2}&current=temperature_2m", baseUrl, latitude, longitude
     );
 
@@ -29,9 +30,11 @@ public static class WeatherForecastDataService {
       return null;
     }
 
+    // latitude and longitude from open-meteo response do not match input coordinates exactly
+    // Assuming forecast is a proper estimation of true value on original coordinates
     return new WeatherForecast {
-      Latitude = openMeteoForecast.latitude,
-      Longitude = openMeteoForecast.longitude,
+      Latitude = latitude,
+      Longitude = longitude,
       Temperature = openMeteoForecast.current.temperature_2m,
       Timestamp = openMeteoForecast.current.time,
     };
