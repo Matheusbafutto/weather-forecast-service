@@ -39,8 +39,8 @@ dotnet run
 ## TODO
 
 - [ ] Work test coverage
-- [ ] Setup remote database
-- [ ] Replace in memory data store with remote database client
+- [x] Setup remote database
+- [x] Replace in memory data store with remote database client
 - [ ] Add json validation to open-meteo calls
 - [ ] Add input validation to API endpoints (ensure range valid for lat and long)
 - [ ] dockerize application and database
