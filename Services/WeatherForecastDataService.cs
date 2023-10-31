@@ -1,17 +1,20 @@
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text.Json;
+using weather_forecast_service.Interfaces;
 using weather_forecast_service.Models;
 
 namespace weather_forecast_service.Services;
 
-public class WeatherForecastDataService {
+public class WeatherForecastDataService : IWeatherForecastDataClient {
   private readonly HttpClient client;
 
   private readonly string baseUrl;
 
-  public WeatherForecastDataService(string weatherApiBaseUrl = "https://api.open-meteo.com") {
-    client = new();
+  public WeatherForecastDataService(
+    HttpClient _client,
+    string weatherApiBaseUrl = "https://api.open-meteo.com"
+  ) {
+    client = _client;
     client.DefaultRequestHeaders.Accept.Add(
       new MediaTypeWithQualityHeaderValue("application/json"));
     baseUrl = weatherApiBaseUrl;

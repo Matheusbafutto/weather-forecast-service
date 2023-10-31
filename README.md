@@ -36,6 +36,14 @@ export MONGODB_URI=mongodb://<local-mongodb-host>:<local-mongodb-port>
 dotnet run
 ```
 
+## Tests
+
+Mocking in C# has proven challenging. I am adding a few test cases while I work to improve test quality and coverage.
+
+### Running tests
+
+`dotnet test`
+
 ## API summary
 
 Swagger URL: `<baseURl>/swagger`
@@ -50,7 +58,7 @@ In local development this link will look like `http://localhost:5118/swagger`
 
 ## TODO
 
-- [ ] Work test coverage
+- [x] Add some test coverage
 - [x] Setup remote database
 - [x] Replace in memory data store with remote database client
 - [ ] Add json validation to open-meteo calls

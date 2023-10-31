@@ -7,11 +7,11 @@ public class WeatherForecastService {
 
     private readonly IWeatherForecastDataStore _weatherForecastDataStore;
 
-    private readonly WeatherForecastDataService _weatherForecastDataService;
+    private readonly IWeatherForecastDataClient _weatherForecastDataService;
 
     public WeatherForecastService(
         IWeatherForecastDataStore weatherForecastDataStore,
-        WeatherForecastDataService weatherForecastDataService
+        IWeatherForecastDataClient weatherForecastDataService
     ) {
         _weatherForecastDataStore = weatherForecastDataStore;
         _weatherForecastDataService = weatherForecastDataService;

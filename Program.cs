@@ -1,3 +1,4 @@
+using MongoDB.Driver;
 using weather_forecast_service.Interfaces;
 using weather_forecast_service.Services;
 
@@ -8,13 +9,14 @@ if (connectionString == null) {
     Console.WriteLine("You must set your 'MONGODB_URI' environment variable. To learn how to set it, see https://www.mongodb.com/docs/drivers/csharp/current/quick-start/#set-your-connection-string");
     Environment.Exit(0);
 }
-IWeatherForecastDataStore weatherForecastMongoDataStoreService = new WeatherForecastMongoDataStoreService(connectionString);
-WeatherForecastDataService weatherForecastDataService = new();
+IMongoClient mongoClient = new MongoClient(connectionString);
 
 // Add services to the container.
-builder.Services.AddSingleton(weatherForecastMongoDataStoreService);
-builder.Services.AddSingleton(weatherForecastDataService);
+builder.Services.AddSingleton(mongoClient);
+builder.Services.AddSingleton<IWeatherForecastDataClient, WeatherForecastDataService>();
+builder.Services.AddSingleton<IWeatherForecastDataStore, WeatherForecastMongoDataStoreService>();
 builder.Services.AddSingleton<WeatherForecastService, WeatherForecastService>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

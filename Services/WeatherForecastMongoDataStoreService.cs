@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.SignalR.Protocol;
 using MongoDB.Driver;
 using weather_forecast_service.Interfaces;
 using weather_forecast_service.Models;
@@ -5,13 +6,15 @@ using weather_forecast_service.Models;
 namespace weather_forecast_service.Services;
 
 public class WeatherForecastMongoDataStoreService : IWeatherForecastDataStore {
-  private MongoClient client;
 
-  private IMongoCollection<MongoWeatherForecastRecord> forecastCollection;
+  private readonly IMongoClient client;
+  private readonly IMongoCollection<MongoWeatherForecastRecord> forecastCollection;
+  private readonly IMongoCollection<MongoWeatherForecastNewEntry> forecastCollectionNewEntry;
 
-  public WeatherForecastMongoDataStoreService(String mongoUri) {
-    client = new MongoClient(mongoUri);
+  public WeatherForecastMongoDataStoreService(IMongoClient _client) {
+    client = _client;
     forecastCollection = client.GetDatabase("weatherForecasts").GetCollection<MongoWeatherForecastRecord>("forecasts");
+    forecastCollectionNewEntry = client.GetDatabase("weatherForecasts").GetCollection<MongoWeatherForecastNewEntry>("forecasts");
   }
 
   public async Task<WeatherForecast?[]> GetAll() {
@@ -40,8 +43,6 @@ public class WeatherForecastMongoDataStoreService : IWeatherForecastDataStore {
   }
 
   public async Task Add(WeatherForecast weatherForecast) {
-    IMongoCollection<MongoWeatherForecastNewEntry> collection = client.GetDatabase("weatherForecasts").GetCollection<MongoWeatherForecastNewEntry>("forecasts");
-
     // We use coordinates for equality comparison in this file's Get(double latitude, double longitude) method
     // to avoid issues with approximation, storing floats as integers
     MongoWeatherForecastNewEntry record = new() {
@@ -50,7 +51,7 @@ public class WeatherForecastMongoDataStoreService : IWeatherForecastDataStore {
       Temperature = weatherForecast.Temperature,
       Timestamp = weatherForecast.Timestamp,
     };
-    await collection.InsertOneAsync(record);
+    await forecastCollectionNewEntry.InsertOneAsync(record);
   }
 
   public async Task Delete(string id) {
