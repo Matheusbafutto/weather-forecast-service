@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using weather_forecast_service.Models;
 using weather_forecast_service.Services;
@@ -54,8 +55,19 @@ public class WeatherForecastController : ControllerBase
             return Conflict(result);
         }
 
-        await _weatherForecastService.Add(latitude, longitude);
-        return Ok();
+        try {
+            await _weatherForecastService.Add(latitude, longitude);
+        } catch (Exception e) {
+            Console.WriteLine(
+                string.Format(
+                    "Exception '{0}' caught in WeatherForecastController Post(latitude={1}, longitude={2})",
+                    e.Message, latitude, longitude
+                )
+            );
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+        result = await _weatherForecastService.Get(latitude, longitude);
+        return Ok(result);
     }
 
     // PUT is meant to be used to refresh the forecast for an existing record
@@ -66,8 +78,19 @@ public class WeatherForecastController : ControllerBase
             return NotFound();
         }
 
-        await _weatherForecastService.Update(id);
-        return Ok();
+        try {
+            await _weatherForecastService.Update(id);
+        } catch (Exception e) {
+            Console.WriteLine(
+                string.Format(
+                    "Exception '{0}' caught in WeatherForecastController Put(id={1})",
+                    e.Message, id
+                )
+            );
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+        }
+        result = await _weatherForecastService.Get(id);
+        return Ok(result);
     }
 
     // DELETE removes specified record from the system if it exists

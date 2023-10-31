@@ -26,6 +26,7 @@ public class WeatherForecastDataService : IWeatherForecastDataClient {
     );
 
     var json = await client.GetStringAsync(url);
+    ValidatorService.ValidateOpenMeteo(json);
 
     var openMeteoForecast = JsonSerializer.Deserialize<OpenMeteoForecast>(json);
 

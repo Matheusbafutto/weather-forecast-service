@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Welcome",
+  "definitions": {
+      "Welcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+              "latitude": {
+                  "type": "number"
+              },
+              "longitude": {
+                  "type": "number"
+              },
+              "generationtime_ms": {
+                  "type": "number"
+              },
+              "utc_offset_seconds": {
+                  "type": "integer"
+              },
+              "timezone": {
+                  "type": "string"
+              },
+              "timezone_abbreviation": {
+                  "type": "string"
+              },
+              "elevation": {
+                  "type": "integer"
+              },
+              "current_units": {
+                  "$ref": "#/definitions/CurrentUnits"
+              },
+              "current": {
+                  "$ref": "#/definitions/Current"
+              }
+          },
+          "required": [
+              "current",
+              "latitude",
+              "longitude"
+          ],
+          "title": "Welcome"
+      },
+      "Current": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+              "time": {
+                  "type": "string"
+              },
+              "interval": {
+                  "type": "integer"
+              },
+              "temperature_2m": {
+                  "type": "number"
+              }
+          },
+          "required": [
+              "temperature_2m",
+              "time"
+          ],
+          "title": "Current"
+      },
+      "CurrentUnits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+              "time": {
+                  "type": "string"
+              },
+              "interval": {
+                  "type": "string"
+              },
+              "temperature_2m": {
+                  "type": "string"
+              }
+          },
+          "required": [
+              "interval",
+              "temperature_2m",
+              "time"
+          ],
+          "title": "CurrentUnits"
+      }
+  }
+}

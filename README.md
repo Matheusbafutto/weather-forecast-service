@@ -61,7 +61,7 @@ In local development this link will look like `http://localhost:5118/swagger`
 - [x] Add some test coverage
 - [x] Setup remote database
 - [x] Replace in memory data store with remote database client
-- [ ] Add json validation to open-meteo calls
+- [x] Add json validation to open-meteo calls
 - [ ] Add input validation to API endpoints (ensure range valid for lat and long)
 - [ ] dockerize application and database
 - [ ] isolate usage per user session (?)
