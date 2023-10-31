@@ -38,7 +38,7 @@ dotnet run
 
 ## Tests
 
-Mocking in C# has proven challenging. I am adding a few test cases while I work to improve test quality and coverage.
+Test coverage for the project needs improvement. Mocking clients that interface with the http and db connection layers of the application has proven challenging. Working to come up with a good way to do it so we may extend coverage in the project going forward.
 
 ### Running tests
 
